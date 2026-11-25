@@ -1,37 +1,63 @@
-# Control Inalámbrico Bluetooth para Guitarra de Clone Hero
+# Guitarra inalámbrica para Clone Hero (ESP32)
 
-## Descripción del Proyecto
+<p>
+  <img alt="ESP32" src="https://img.shields.io/badge/ESP32-Bluetooth_LE-E7352C?logo=espressif&logoColor=white" />
+  <img alt="Arduino" src="https://img.shields.io/badge/Arduino-core_esp32_3.x-00878F?logo=arduino&logoColor=white" />
+</p>
 
-Este proyecto involucra el desarrollo de un controlador inalámbrico Bluetooth para usar con el juego Clone Hero, imitando una guitarra de juego. Se utiliza un microcontrolador ESP32 debido a su capacidad Bluetooth y se programa con la librería BLEGamepad para emular un gamepad.
+Control inalámbrico para jugar **Clone Hero** con una guitarra. Un ESP32 se anuncia por **Bluetooth LE**
+como un gamepad estándar («Guitarra Azul») con 9 botones, así que la PC lo reconoce sin drivers y Clone Hero
+lo configura como cualquier control.
 
-## Características Principales
+## Cómo funciona
 
-- **Conexión Bluetooth:** El controlador utiliza Bluetooth para conectar con el PC o consola donde se ejecuta Clone Hero.
-- **Emulación de Gamepad:** Gracias a la biblioteca BLEGamepad, el dispositivo se reconoce como un control de juego estándar.
-- **Botones personalizados:** Incluye botones configurados como las cuerdas de una guitarra, permitiendo una experiencia de juego auténtica.
-- **Portabilidad y facilidad de uso:** Diseñado para ser ligero y fácil de manejar durante largas sesiones de juego.
+```mermaid
+flowchart LR
+    B["9 pulsadores<br/>trastes · rasgueo · menú"] -->|"GPIO con pull-up"| E["ESP32<br/>lectura cada 5 ms"]
+    E -->|"Bluetooth LE<br/>perfil HID gamepad"| PC["PC / teléfono"]
+    PC --> CH["Clone Hero<br/>asigna botones 1–9"]
+```
 
-## Herramientas y Tecnologías Utilizadas
+- Cada pulsador va entre su GPIO y GND. Presionado se lee 0 y suelto 1.
+- El firmware envía un reporte BLE **solo cuando cambia algún botón**, para no saturar el enlace.
+- En Clone Hero, en *Settings → Controls*, se asigna cada botón del gamepad a un traste, al rasgueo o al menú.
 
-- **Microcontrolador:** ESP32
-- **Lenguaje de Programación:** Arduino
-- **Librerías Específicas:** BLEGamepad para la funcionalidad Bluetooth
-- **Herramientas de Desarrollo:** Arduino IDE
+## Conexiones
 
-## Diagrama del Proyecto
+![Esquema de conexiones](docs/esquema-conexiones.svg)
 
-El proyecto está compuesto por:
+| Botón del gamepad | GPIO | Nota |
+|---|---|---|
+| 1 | 13 | |
+| 2 | 14 | |
+| 3 | 27 | |
+| 4 | 26 | |
+| 5 | 25 | |
+| 6 | 33 | |
+| 7 | 32 | |
+| 8 | 35 | **Pull-up externa de 10 kΩ a 3V3** |
+| 9 | 34 | **Pull-up externa de 10 kΩ a 3V3** |
 
-- Un ESP32 que actúa como el cerebro del controlador.
-- Botones mapeados a las funciones de la guitarra de Clone Hero.
-- Batería recargable para asegurar horas de juego sin interrupciones.
+> GPIO34 y GPIO35 son pines solo de entrada y **no tienen resistencia pull-up interna**. Sin la resistencia
+> externa quedan flotando y pueden generar pulsaciones fantasma.
 
-## Implementación
+**Materiales:** ESP32 DevKit V1 · 9 pulsadores · 2 resistencias de 10 kΩ · cuerpo de guitarra · batería
+recargable con regulación a 5 V por USB o VIN.
 
-### Configuración del ESP32
+## Compilar y usar
 
-1. Instalar Arduino IDE y configurarlo para soportar el desarrollo con ESP32.
-2. Instalar la librería BLEGamepad desde el gestor de librerías de Arduino.
-3. Conectar los botones y otros componentes de entrada al ESP32 según el esquema de conexión.
+1. Arduino IDE 2 con el paquete **esp32 de Espressif** (3.x) y la placa **ESP32 Dev Module**.
+2. Instale la librería **ESP32-BLE-Gamepad** (lemmingDev) desde el gestor de librerías; instala también
+   *NimBLE-Arduino*.
+3. Abra `ControlEsp32Guitarra/ControlEsp32Guitarra.ino` y suba el programa. Compila sin advertencias y usa el
+   47 % de la flash.
+4. En la PC, empareje el dispositivo Bluetooth **Guitarra Azul** y asigne los botones en Clone Hero.
 
+## Cambios respecto de la primera versión
 
+- Se declaraban 10 botones pero solo había 9 pines: el décimo leía el GPIO0 (BOOT) y enviaba un número de
+  botón inválido. Ahora son 9.
+- La detección de cambios comparaba los arreglos como punteros (siempre distintos), así que enviaba un
+  reporte cada ciclo. Ahora solo se envía cuando algo cambia.
+- La lectura pasó de 20 ms a 5 ms para reducir la latencia al tocar.
+- El sketch se movió a su propia carpeta, como exige Arduino IDE.

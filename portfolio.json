@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "titulo": "Guitarra inalámbrica para Clone Hero",
+  "resumen": "Control de guitarra para Clone Hero con ESP32 que se anuncia por Bluetooth LE como gamepad estándar de 9 botones, sin drivers.",
+  "categorias": ["iot", "embebidos"],
+  "stack": ["ESP32", "C++", "Arduino", "Bluetooth LE", "HID"],
+  "estado": "Funcional",
+  "destacado": false,
+  "anio": 2024,
+  "rol": "Diseño del circuito y firmware",
+  "portada": "docs/esquema-conexiones.svg",
+  "capturas": ["docs/esquema-conexiones.svg"],
+  "aspectos": [
+    "Gamepad BLE HID reconocido sin drivers",
+    "Reportes solo cuando cambia un botón; lectura cada 5 ms"
+  ],
+  "demo": null
+}
