@@ -61,3 +61,5 @@ recargable con regulación a 5 V por USB o VIN.
   reporte cada ciclo. Ahora solo se envía cuando algo cambia.
 - La lectura pasó de 20 ms a 5 ms para reducir la latencia al tocar.
 - El sketch se movió a su propia carpeta, como exige Arduino IDE.
+
+Estos cambios compilan sin advertencias, pero todavía no se han probado en la guitarra física.
