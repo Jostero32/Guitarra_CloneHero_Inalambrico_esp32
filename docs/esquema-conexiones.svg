@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 660" width="1000" height="660" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif">
   <title>Guitarra Clone Hero: esquema de conexiones</title>
   <style>
     .card { fill: #ffffff; stroke: #e5e7eb; }
@@ -14,9 +14,9 @@
     .sub { font-size: 12px; fill: #6b7280; }
   </style>
 
-  <rect class="card" x="1" y="1" width="998" height="638" rx="14"/>
+  <rect class="card" x="1" y="1" width="998" height="658" rx="14"/>
   <text class="t" x="40" y="40" font-size="20" font-weight="700">Guitarra Clone Hero · esquema de conexiones</text>
-  <text class="muted" x="40" y="62" font-size="13">ESP32 DevKit V1 como gamepad Bluetooth LE · 9 pulsadores entre GPIO y GND</text>
+  <text class="muted" x="40" y="62" font-size="13">ESP32 DevKit V1 como gamepad Bluetooth LE · 10 pulsadores entre GPIO y GND</text>
 
   <!-- ESP32 (header izquierdo) -->
   <rect x="700" y="90" width="230" height="480" rx="10" fill="#1b2533"/>
@@ -39,7 +39,7 @@
     <circle cx="712" cy="354" r="5" fill="#facc15"/><text class="pinlbl pinused" x="724" y="358">D26</text>
     <circle cx="712" cy="382" r="5" fill="#facc15"/><text class="pinlbl pinused" x="724" y="386">D27</text>
     <circle cx="712" cy="410" r="5" fill="#facc15"/><text class="pinlbl pinused" x="724" y="414">D14</text>
-    <circle cx="712" cy="438" r="5" fill="#6b7280"/><text class="pinlbl" x="724" y="442">D12</text>
+    <circle cx="712" cy="438" r="5" fill="#facc15"/><text class="pinlbl pinused" x="724" y="442">D12</text>
     <circle cx="712" cy="466" r="5" fill="#facc15"/><text class="pinlbl pinused" x="724" y="470">D13</text>
     <circle cx="712" cy="494" r="5" fill="#facc15"/><text class="pinlbl pinused" x="724" y="498">GND</text>
     <circle cx="712" cy="522" r="5" fill="#6b7280"/><text class="pinlbl" x="724" y="526">VIN</text>
@@ -47,7 +47,7 @@
 
   <!-- Pulsadores: pin → pulsador (contactos en 452 y 500) → bus GND en x=360 -->
   <g id="botones">
-    <path class="sig" d="M707 214 H504 M707 242 H504 M707 270 H504 M707 298 H504 M707 326 H504 M707 354 H504 M707 382 H504 M707 410 H504 M707 466 H504"/>
+    <path class="sig" d="M707 214 H504 M707 242 H504 M707 270 H504 M707 298 H504 M707 326 H504 M707 354 H504 M707 382 H504 M707 410 H504 M707 438 H504 M707 466 H504"/>
     <g class="comp">
       <circle cx="500" cy="214" r="3.5"/><circle cx="452" cy="214" r="3.5"/><path d="M444 204 H508 M476 204 V197 M468 197 H484"/>
       <circle cx="500" cy="242" r="3.5"/><circle cx="452" cy="242" r="3.5"/><path d="M444 232 H508 M476 232 V225 M468 225 H484"/>
@@ -57,14 +57,15 @@
       <circle cx="500" cy="354" r="3.5"/><circle cx="452" cy="354" r="3.5"/><path d="M444 344 H508 M476 344 V337 M468 337 H484"/>
       <circle cx="500" cy="382" r="3.5"/><circle cx="452" cy="382" r="3.5"/><path d="M444 372 H508 M476 372 V365 M468 365 H484"/>
       <circle cx="500" cy="410" r="3.5"/><circle cx="452" cy="410" r="3.5"/><path d="M444 400 H508 M476 400 V393 M468 393 H484"/>
+      <circle cx="500" cy="438" r="3.5"/><circle cx="452" cy="438" r="3.5"/><path d="M444 428 H508 M476 428 V421 M468 421 H484"/>
       <circle cx="500" cy="466" r="3.5"/><circle cx="452" cy="466" r="3.5"/><path d="M444 456 H508 M476 456 V449 M468 449 H484"/>
     </g>
-    <path class="gnd" d="M448 214 H360 M448 242 H360 M448 270 H360 M448 298 H360 M448 326 H360 M448 354 H360 M448 382 H360 M448 410 H360 M448 466 H360"/>
+    <path class="gnd" d="M448 214 H360 M448 242 H360 M448 270 H360 M448 298 H360 M448 326 H360 M448 354 H360 M448 382 H360 M448 410 H360 M448 438 H360 M448 466 H360"/>
     <path class="gnd" d="M360 214 V494 H707"/>
     <g fill="#374151">
       <circle cx="360" cy="242" r="3.5"/><circle cx="360" cy="270" r="3.5"/><circle cx="360" cy="298" r="3.5"/>
       <circle cx="360" cy="326" r="3.5"/><circle cx="360" cy="354" r="3.5"/><circle cx="360" cy="382" r="3.5"/>
-      <circle cx="360" cy="410" r="3.5"/><circle cx="360" cy="466" r="3.5"/>
+      <circle cx="360" cy="410" r="3.5"/><circle cx="360" cy="438" r="3.5"/><circle cx="360" cy="466" r="3.5"/>
     </g>
   </g>
 
@@ -78,6 +79,7 @@
     <text class="lbl" x="345" y="358">Botón 4</text>
     <text class="lbl" x="345" y="386">Botón 3</text>
     <text class="lbl" x="345" y="414">Botón 2</text>
+    <text class="lbl" x="345" y="442">Botón 10</text>
     <text class="lbl" x="345" y="470">Botón 1</text>
   </g>
   <text class="sub" x="300" y="512">GND común</text>
@@ -91,5 +93,6 @@
   <!-- Notas -->
   <text class="sub" x="40" y="560">• Los botones se leen con INPUT_PULLUP: en reposo valen 1 y al presionar 0.</text>
   <text class="sub" x="40" y="580">• GPIO34 y 35 son solo de entrada y no tienen pull-up interna: sin la resistencia externa quedan flotando.</text>
-  <text class="sub" x="40" y="600">• En Clone Hero los botones 1 a 9 se asignan a trastes, rasgueo y menú desde la configuración del control.</text>
+  <text class="sub" x="40" y="620">• GPIO12 es pin de arranque: solo pulsador a GND, sin resistencia a 3V3, o el ESP32 no arranca.</text>
+  <text class="sub" x="40" y="600">• En Clone Hero los botones 1 a 10 se asignan a trastes, rasgueo y menú desde la configuración del control.</text>
 </svg>

@@ -6,16 +6,16 @@
 </p>
 
 Control inalámbrico para jugar **Clone Hero** con una guitarra. Un ESP32 se anuncia por **Bluetooth LE**
-como un gamepad estándar («Guitarra Azul») con 9 botones, así que la PC lo reconoce sin drivers y Clone Hero
+como un gamepad estándar («Guitarra Azul») con 10 botones, así que la PC lo reconoce sin drivers y Clone Hero
 lo configura como cualquier control.
 
 ## Cómo funciona
 
 ```mermaid
 flowchart LR
-    B["9 pulsadores<br/>trastes · rasgueo · menú"] -->|"GPIO con pull-up"| E["ESP32<br/>lectura cada 5 ms"]
+    B["10 pulsadores<br/>trastes · rasgueo · menú"] -->|"GPIO con pull-up"| E["ESP32<br/>lectura cada 5 ms"]
     E -->|"Bluetooth LE<br/>perfil HID gamepad"| PC["PC / teléfono"]
-    PC --> CH["Clone Hero<br/>asigna botones 1–9"]
+    PC --> CH["Clone Hero<br/>asigna botones 1–10"]
 ```
 
 - Cada pulsador va entre su GPIO y GND. Presionado se lee 0 y suelto 1.
@@ -37,11 +37,15 @@ flowchart LR
 | 7 | 32 | |
 | 8 | 35 | **Pull-up externa de 10 kΩ a 3V3** |
 | 9 | 34 | **Pull-up externa de 10 kΩ a 3V3** |
+| 10 | 12 | Pin de arranque: solo pulsador a GND, **sin** pull-up externa |
 
 > GPIO34 y GPIO35 son pines solo de entrada y **no tienen resistencia pull-up interna**. Sin la resistencia
 > externa quedan flotando y pueden generar pulsaciones fantasma.
+>
+> GPIO12 es un pin de arranque que debe estar en bajo al encender. Un pulsador a GND no lo afecta, pero no le
+> conecte una resistencia a 3V3 o el ESP32 no arrancará.
 
-**Materiales:** ESP32 DevKit V1 · 9 pulsadores · 2 resistencias de 10 kΩ · cuerpo de guitarra · batería
+**Materiales:** ESP32 DevKit V1 · 10 pulsadores · 2 resistencias de 10 kΩ · cuerpo de guitarra · batería
 recargable con regulación a 5 V por USB o VIN.
 
 ## Compilar y usar
@@ -53,10 +57,16 @@ recargable con regulación a 5 V por USB o VIN.
    47 % de la flash.
 4. En la PC, empareje el dispositivo Bluetooth **Guitarra Azul** y asigne los botones en Clone Hero.
 
+## Versión joystick para teléfono
+
+En Android algunos botones de esta versión no se reconocen. La carpeta
+[`ControlEsp32GuitarraJoystick`](ControlEsp32GuitarraJoystick/) tiene una variante con el mismo circuito que
+envía el rasgueo por el joystick y la cruceta, los trastes como A, B, X, Y y L1, y el botón extra como R1.
+
 ## Cambios respecto de la primera versión
 
 - Se declaraban 10 botones pero solo había 9 pines: el décimo leía el GPIO0 (BOOT) y enviaba un número de
-  botón inválido. Ahora son 9.
+  botón inválido. Ahora el décimo botón tiene su propio pin, GPIO12.
 - La detección de cambios comparaba los arreglos como punteros (siempre distintos), así que enviaba un
   reporte cada ciclo. Ahora solo se envía cuando algo cambia.
 - La lectura pasó de 20 ms a 5 ms para reducir la latencia al tocar.
