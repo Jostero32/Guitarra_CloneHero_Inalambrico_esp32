@@ -28,6 +28,13 @@ byte previousStates[NUM_BUTTONS];
 
 void setup()
 {
+    Serial.begin(115200);
+    delay(200);
+    // Número de esp_reset_reason(): 1 encendido, 2 pin EN, 3 software,
+    // 4 panic, 5 watchdog de interrupciones, 6 watchdog de tareas,
+    // 7 otro watchdog, 9 brownout.
+    Serial.printf("\nMotivo del último reinicio: %d\n", (int)esp_reset_reason());
+
     for (byte i = 0; i < NUM_BUTTONS; i++)
     {
         // En GPIO34/35 INPUT_PULLUP no tiene efecto: usan la pull-up externa.
@@ -43,12 +50,8 @@ void setup()
 
 void loop()
 {
-    if (!bleGamepad.isConnected())
-    {
-        delay(100);
-        return;
-    }
-
+    // Los botones se leen y se muestran por el monitor serie aunque no haya
+    // nada conectado, para poder identificar los pines de la guitarra.
     bool changed = false;
     for (byte i = 0; i < NUM_BUTTONS; i++)
     {
@@ -58,11 +61,13 @@ void loop()
         if (state == LOW) bleGamepad.press(gamepadButtons[i]);
         else bleGamepad.release(gamepadButtons[i]);
 
+        Serial.printf("Botón %u (GPIO%u) %s\n", gamepadButtons[i], buttonPins[i],
+                      state == LOW ? "presionado" : "suelto");
         previousStates[i] = state;
         changed = true;
     }
 
-    if (changed) bleGamepad.sendReport();
+    if (changed && bleGamepad.isConnected()) bleGamepad.sendReport();
 
     delay(5);  // Lectura cada 5 ms; también filtra el rebote de los pulsadores
 }

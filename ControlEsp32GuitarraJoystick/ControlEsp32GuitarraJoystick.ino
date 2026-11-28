@@ -107,9 +107,28 @@ void actualizarRasgueo()
     }
 }
 
+const char *motivoReinicio()
+{
+    switch (esp_reset_reason())
+    {
+    case ESP_RST_POWERON: return "encendido";
+    case ESP_RST_EXT: return "pin EN";
+    case ESP_RST_SW: return "reinicio por software";
+    case ESP_RST_PANIC: return "fallo del programa (panic)";
+    case ESP_RST_INT_WDT: return "watchdog de interrupciones";
+    case ESP_RST_TASK_WDT: return "watchdog de tareas";
+    case ESP_RST_WDT: return "otro watchdog";
+    case ESP_RST_DEEPSLEEP: return "salida de deep sleep";
+    case ESP_RST_BROWNOUT: return "caída de voltaje (brownout)";
+    default: return "desconocido";
+    }
+}
+
 void setup()
 {
     Serial.begin(115200);
+    delay(200);
+    Serial.printf("\nMotivo del último reinicio: %s\n", motivoReinicio());
 
     for (uint8_t i = 0; i < NUM_ENTRADAS; i++)
     {
@@ -140,24 +159,24 @@ void setup()
 
 void loop()
 {
-    if (!bleGamepad.isConnected())
-    {
-        estabaConectado = false;
-        delay(100);
-        return;
-    }
-
+    const bool conectado = bleGamepad.isConnected();
     bool cambio = false;
 
-    if (!estabaConectado)
+    if (conectado && !estabaConectado)
     {
         // Al conectar se manda el estado actual para que el teléfono no se
         // quede con valores de una sesión anterior.
-        estabaConectado = true;
         cambio = true;
         Serial.println("Conectado");
     }
+    else if (!conectado && estabaConectado)
+    {
+        Serial.println("Desconectado");
+    }
+    estabaConectado = conectado;
 
+    // Los pulsadores se leen y se muestran por el monitor serie aunque no haya
+    // teléfono conectado, para poder identificar los pines de la guitarra.
     for (uint8_t i = 0; i < NUM_ENTRADAS; i++)
     {
         const uint8_t estado = digitalRead(entradas[i].pin);
@@ -183,11 +202,11 @@ void loop()
             break;
         }
 
-        Serial.print(entradas[i].nombre);
-        Serial.println(presionado ? " presionado" : " suelto");
+        Serial.printf("%s (GPIO%u) %s\n", entradas[i].nombre, entradas[i].pin,
+                      presionado ? "presionado" : "suelto");
     }
 
-    if (cambio) bleGamepad.sendReport();
+    if (cambio && conectado) bleGamepad.sendReport();
 
     delay(5);  // Lectura cada 5 ms; también filtra el rebote de los pulsadores
 }
