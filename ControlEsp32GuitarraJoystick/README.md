@@ -27,7 +27,7 @@ Esta versión usa solo entradas estándar, con la misma distribución que una gu
 | Rasgueo abajo | 32 | Joystick Y abajo + cruceta abajo |
 | Start | 35 | `START` (pull-up externa de 10 kΩ) |
 | Select | 34 | `SELECT` (pull-up externa de 10 kΩ) |
-| Extra (p. ej. Star Power) | 12 | `R1` (solo pulsador a GND, sin pull-up externa) |
+| Extra (p. ej. Star Power) | 23 | `R1` |
 
 Si sus cables están en otro orden, cambie los pines en la tabla `entradas[]` del sketch.
 

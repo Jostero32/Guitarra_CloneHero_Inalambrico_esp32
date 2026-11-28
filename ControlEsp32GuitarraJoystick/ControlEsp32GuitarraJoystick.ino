@@ -18,8 +18,9 @@
  * Nota de hardware: GPIO34 y GPIO35 son solo de entrada y NO tienen pull-up
  * interna. Esos dos botones necesitan una resistencia de 10 kΩ a 3V3.
  *
- * GPIO12 (botón 10) es pin de arranque: debe estar en bajo al encender. Un
- * pulsador a GND no lo afecta; no le conecte una pull-up externa.
+ * El botón 10 usa GPIO23. No use GPIO12: es pin de arranque y, con la pull-up
+ * interna activa, un reinicio por watchdog lo deja en alto y el ESP32 entra en
+ * un ciclo de reinicios con «csum err».
  */
 
 #include <Arduino.h>
@@ -73,7 +74,7 @@ const Entrada entradas[] = {
     {32, RASGUEO_ABAJO, 0, "Rasgueo abajo"},
     {35, TRASTE, BTN_START, "Start"},    // Pull-up externa de 10 kΩ
     {34, TRASTE, BTN_SELECT, "Select"},  // Pull-up externa de 10 kΩ
-    {12, TRASTE, BTN_R1, "Extra"},       // P. ej. Star Power
+    {23, TRASTE, BTN_R1, "Extra"},       // P. ej. Star Power
 };
 const uint8_t NUM_ENTRADAS = sizeof(entradas) / sizeof(entradas[0]);
 

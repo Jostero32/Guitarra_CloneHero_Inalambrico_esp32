@@ -28,13 +28,13 @@ lo configura como cualquier control.
 | 7 | 32 | |
 | 8 | 35 | **Pull-up externa de 10 kΩ a 3V3** |
 | 9 | 34 | **Pull-up externa de 10 kΩ a 3V3** |
-| 10 | 12 | Pin de arranque: solo pulsador a GND, **sin** pull-up externa |
+| 10 | 23 | En el lado derecho de la placa |
 
 > GPIO34 y GPIO35 son pines solo de entrada y **no tienen resistencia pull-up interna**. Sin la resistencia
 > externa quedan flotando y pueden generar pulsaciones fantasma.
 >
-> GPIO12 es un pin de arranque que debe estar en bajo al encender. Un pulsador a GND no lo afecta, pero no le
-> conecte una resistencia a 3V3 o el ESP32 no arrancará.
+> No use GPIO12 para botones: es un pin de arranque y, con la pull-up activa, el ESP32 puede quedar en un ciclo
+> de reinicios con `csum err`.
 
 **Materiales:** ESP32 DevKit V1 · 10 pulsadores · 2 resistencias de 10 kΩ · cuerpo de guitarra · batería
 recargable con regulación a 5 V por USB o VIN.

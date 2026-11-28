@@ -10,8 +10,9 @@
  * Nota de hardware: GPIO34 y GPIO35 son solo de entrada y NO tienen pull-up
  * interna. Esos dos botones necesitan una resistencia de 10 kΩ a 3V3.
  *
- * GPIO12 (botón 10) es pin de arranque: debe estar en bajo al encender. Un
- * pulsador a GND no lo afecta; no le conecte una pull-up externa.
+ * El botón 10 usa GPIO23. No use GPIO12: es pin de arranque y, con la pull-up
+ * interna activa, un reinicio por watchdog lo deja en alto y el ESP32 entra en
+ * un ciclo de reinicios con «csum err».
  */
 
 #include <Arduino.h>
@@ -20,7 +21,7 @@
 BleGamepad bleGamepad("Guitarra Azul");  // Nombre que aparece al emparejar
 
 const byte NUM_BUTTONS = 10;
-const byte buttonPins[NUM_BUTTONS] = {13, 14, 27, 26, 25, 33, 32, 35, 34, 12};
+const byte buttonPins[NUM_BUTTONS] = {13, 14, 27, 26, 25, 33, 32, 35, 34, 23};
 const byte gamepadButtons[NUM_BUTTONS] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 byte previousStates[NUM_BUTTONS];
