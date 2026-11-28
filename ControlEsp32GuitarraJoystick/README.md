@@ -36,7 +36,7 @@ Si sus cables están en otro orden, cambie los pines en la tabla `entradas[]` de
 1. Suba `ControlEsp32GuitarraJoystick.ino` igual que la versión original (ESP32 Dev Module, librería
    ESP32-BLE-Gamepad 0.8.x).
 2. En el teléfono, **olvide** el dispositivo «Guitarra Azul» si estaba emparejado y empareje
-   **«Guitarra Azul Joystick»**. El nombre cambia a propósito para que Android lea el nuevo descriptor.
+   **«Guitarra Naranja»**. El nombre cambia a propósito para que Android lea el nuevo descriptor.
 3. En Clone Hero asigne cada traste, el rasgueo (cruceta o eje Y), Start/Select y el botón extra.
 
 Por el monitor serie (115200 baudios) se imprime cada pulsador al presionarlo y soltarlo, útil para comprobar

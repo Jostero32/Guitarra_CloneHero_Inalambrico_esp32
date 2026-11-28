@@ -53,3 +53,10 @@ recargable con regulación a 5 V por USB o VIN.
 En Android algunos botones de esta versión no se reconocen. La carpeta
 [`ControlEsp32GuitarraJoystick`](ControlEsp32GuitarraJoystick/) tiene una variante con el mismo circuito que
 envía el rasgueo por el joystick y la cruceta, los trastes como A, B, X, Y y L1, y el botón extra como R1.
+
+## Diagnóstico de pines
+
+[`BuscarPines`](BuscarPines/) es un sketch sin Bluetooth que muestra por el monitor serie (115200 baudios) qué GPIO
+cambia al presionar cada pulsador. Sirve para identificar el cableado de una guitarra o detectar un corto: si al
+presionar un botón el ESP32 se reinicia con `Brownout detector was triggered`, ese pulsador no va entre un GPIO
+y GND.

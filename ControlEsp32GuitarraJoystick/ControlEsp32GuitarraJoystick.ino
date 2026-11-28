@@ -28,7 +28,7 @@
 
 // Nombre distinto al de la versión de botones, para que el teléfono no
 // reutilice el emparejamiento anterior (que guarda el descriptor HID viejo).
-BleGamepad bleGamepad("Guitarra Azul Joystick");
+BleGamepad bleGamepad("Guitarra Naranja");
 
 // Tipo de dispositivo HID. CONTROLLER_TYPE_GAMEPAD hace que Android traduzca
 // los botones a A, B, X, Y, L1, Select y Start. Con CONTROLLER_TYPE_JOYSTICK
@@ -132,8 +132,8 @@ void setup()
 
     for (uint8_t i = 0; i < NUM_ENTRADAS; i++)
     {
-        // En GPIO34/35 INPUT_PULLUP no tiene efecto: usan la pull-up externa.
-        pinMode(entradas[i].pin, INPUT_PULLUP);
+        // GPIO34–39 no tienen pull-up interna: usan la resistencia externa.
+        pinMode(entradas[i].pin, entradas[i].pin >= 34 ? INPUT : INPUT_PULLUP);
         estadosPrevios[i] = HIGH;
     }
 

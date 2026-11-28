@@ -37,8 +37,8 @@ void setup()
 
     for (byte i = 0; i < NUM_BUTTONS; i++)
     {
-        // En GPIO34/35 INPUT_PULLUP no tiene efecto: usan la pull-up externa.
-        pinMode(buttonPins[i], INPUT_PULLUP);
+        // GPIO34–39 no tienen pull-up interna: usan la resistencia externa.
+        pinMode(buttonPins[i], buttonPins[i] >= 34 ? INPUT : INPUT_PULLUP);
         previousStates[i] = HIGH;
     }
 
