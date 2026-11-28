@@ -1,7 +1,7 @@
 /*
  * Guitarra inalámbrica para Clone Hero con ESP32 (Bluetooth LE)
  *
- * El ESP32 se anuncia como un gamepad BLE («Guitarra Azul») con 9 botones.
+ * El ESP32 se anuncia como un gamepad BLE («Guitarra Azul») con 10 botones.
  * Cada botón físico va entre su GPIO y GND; en Clone Hero se asignan a los
  * trastes, el rasgueo y los botones de menú desde la configuración del control.
  *
@@ -9,6 +9,10 @@
  *
  * Nota de hardware: GPIO34 y GPIO35 son solo de entrada y NO tienen pull-up
  * interna. Esos dos botones necesitan una resistencia de 10 kΩ a 3V3.
+ *
+ * El botón 10 usa GPIO23. No use GPIO12: es pin de arranque y, con la pull-up
+ * interna activa, un reinicio por watchdog lo deja en alto y el ESP32 entra en
+ * un ciclo de reinicios con «csum err».
  */
 
 #include <Arduino.h>
@@ -16,18 +20,25 @@
 
 BleGamepad bleGamepad("Guitarra Azul");  // Nombre que aparece al emparejar
 
-const byte NUM_BUTTONS = 9;
-const byte buttonPins[NUM_BUTTONS] = {13, 14, 27, 26, 25, 33, 32, 35, 34};
-const byte gamepadButtons[NUM_BUTTONS] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+const byte NUM_BUTTONS = 10;
+const byte buttonPins[NUM_BUTTONS] = {13, 14, 27, 26, 25, 33, 32, 35, 34, 23};
+const byte gamepadButtons[NUM_BUTTONS] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 byte previousStates[NUM_BUTTONS];
 
 void setup()
 {
+    Serial.begin(115200);
+    delay(200);
+    // Número de esp_reset_reason(): 1 encendido, 2 pin EN, 3 software,
+    // 4 panic, 5 watchdog de interrupciones, 6 watchdog de tareas,
+    // 7 otro watchdog, 9 brownout.
+    Serial.printf("\nMotivo del último reinicio: %d\n", (int)esp_reset_reason());
+
     for (byte i = 0; i < NUM_BUTTONS; i++)
     {
-        // En GPIO34/35 INPUT_PULLUP no tiene efecto: usan la pull-up externa.
-        pinMode(buttonPins[i], INPUT_PULLUP);
+        // GPIO34–39 no tienen pull-up interna: usan la resistencia externa.
+        pinMode(buttonPins[i], buttonPins[i] >= 34 ? INPUT : INPUT_PULLUP);
         previousStates[i] = HIGH;
     }
 
@@ -39,12 +50,8 @@ void setup()
 
 void loop()
 {
-    if (!bleGamepad.isConnected())
-    {
-        delay(100);
-        return;
-    }
-
+    // Los botones se leen y se muestran por el monitor serie aunque no haya
+    // nada conectado, para poder identificar los pines de la guitarra.
     bool changed = false;
     for (byte i = 0; i < NUM_BUTTONS; i++)
     {
@@ -54,11 +61,13 @@ void loop()
         if (state == LOW) bleGamepad.press(gamepadButtons[i]);
         else bleGamepad.release(gamepadButtons[i]);
 
+        Serial.printf("Botón %u (GPIO%u) %s\n", gamepadButtons[i], buttonPins[i],
+                      state == LOW ? "presionado" : "suelto");
         previousStates[i] = state;
         changed = true;
     }
 
-    if (changed) bleGamepad.sendReport();
+    if (changed && bleGamepad.isConnected()) bleGamepad.sendReport();
 
     delay(5);  // Lectura cada 5 ms; también filtra el rebote de los pulsadores
 }

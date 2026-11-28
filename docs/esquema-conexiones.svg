@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 660" width="1000" height="660" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif">
   <title>Guitarra Clone Hero: esquema de conexiones</title>
   <style>
     .card { fill: #ffffff; stroke: #e5e7eb; }
@@ -14,9 +14,9 @@
     .sub { font-size: 12px; fill: #6b7280; }
   </style>
 
-  <rect class="card" x="1" y="1" width="998" height="638" rx="14"/>
+  <rect class="card" x="1" y="1" width="998" height="658" rx="14"/>
   <text class="t" x="40" y="40" font-size="20" font-weight="700">Guitarra Clone Hero · esquema de conexiones</text>
-  <text class="muted" x="40" y="62" font-size="13">ESP32 DevKit V1 como gamepad Bluetooth LE · 9 pulsadores entre GPIO y GND</text>
+  <text class="muted" x="40" y="62" font-size="13">ESP32 DevKit V1 como gamepad Bluetooth LE · 10 pulsadores entre GPIO y GND</text>
 
   <!-- ESP32 (header izquierdo) -->
   <rect x="700" y="90" width="230" height="480" rx="10" fill="#1b2533"/>
@@ -91,5 +91,6 @@
   <!-- Notas -->
   <text class="sub" x="40" y="560">• Los botones se leen con INPUT_PULLUP: en reposo valen 1 y al presionar 0.</text>
   <text class="sub" x="40" y="580">• GPIO34 y 35 son solo de entrada y no tienen pull-up interna: sin la resistencia externa quedan flotando.</text>
-  <text class="sub" x="40" y="600">• En Clone Hero los botones 1 a 9 se asignan a trastes, rasgueo y menú desde la configuración del control.</text>
+  <text class="sub" x="40" y="620">• Botón 10: pulsador entre D23 (lado derecho de la placa) y GND. D12 no se usa: es pin de arranque.</text>
+  <text class="sub" x="40" y="600">• En Clone Hero los botones 1 a 10 se asignan a trastes, rasgueo y menú desde la configuración del control.</text>
 </svg>
