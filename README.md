@@ -11,20 +11,11 @@ lo configura como cualquier control.
 
 ## Cómo funciona
 
-```mermaid
-flowchart LR
-    B["10 pulsadores<br/>trastes · rasgueo · menú"] -->|"GPIO con pull-up"| E["ESP32<br/>lectura cada 5 ms"]
-    E -->|"Bluetooth LE<br/>perfil HID gamepad"| PC["PC / teléfono"]
-    PC --> CH["Clone Hero<br/>asigna botones 1–10"]
-```
-
 - Cada pulsador va entre su GPIO y GND. Presionado se lee 0 y suelto 1.
 - El firmware envía un reporte BLE **solo cuando cambia algún botón**, para no saturar el enlace.
 - En Clone Hero, en *Settings → Controls*, se asigna cada botón del gamepad a un traste, al rasgueo o al menú.
 
 ## Conexiones
-
-![Esquema de conexiones](docs/esquema-conexiones.svg)
 
 | Botón del gamepad | GPIO | Nota |
 |---|---|---|
@@ -62,14 +53,3 @@ recargable con regulación a 5 V por USB o VIN.
 En Android algunos botones de esta versión no se reconocen. La carpeta
 [`ControlEsp32GuitarraJoystick`](ControlEsp32GuitarraJoystick/) tiene una variante con el mismo circuito que
 envía el rasgueo por el joystick y la cruceta, los trastes como A, B, X, Y y L1, y el botón extra como R1.
-
-## Cambios respecto de la primera versión
-
-- Se declaraban 10 botones pero solo había 9 pines: el décimo leía el GPIO0 (BOOT) y enviaba un número de
-  botón inválido. Ahora el décimo botón tiene su propio pin, GPIO12.
-- La detección de cambios comparaba los arreglos como punteros (siempre distintos), así que enviaba un
-  reporte cada ciclo. Ahora solo se envía cuando algo cambia.
-- La lectura pasó de 20 ms a 5 ms para reducir la latencia al tocar.
-- El sketch se movió a su propia carpeta, como exige Arduino IDE.
-
-Estos cambios compilan sin advertencias, pero todavía no se han probado en la guitarra física.
